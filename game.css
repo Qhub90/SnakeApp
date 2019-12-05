@@ -1,0 +1,19 @@
+.app{
+  border:solid 2px red;
+  position: relative;
+}
+
+.header{
+  border:solid 3px blue;
+  text-align: center;
+}
+
+.edge{
+  border: solid 4px green;
+
+}
+
+#gameBoard{
+  border: solid 5px black;
+  margin: auto;
+}
