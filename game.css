@@ -1,4 +1,4 @@
-.app{
+/* .app{
   border:solid 2px red;
   position: relative;
 }
@@ -11,9 +11,9 @@
 .edge{
   border: solid 4px green;
 
-}
+} */
 
 #gameBoard{
   border: solid 5px black;
-  margin: auto;
+ 
 }
