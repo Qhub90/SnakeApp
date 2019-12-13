@@ -1,27 +1,35 @@
 let board;
 let boardContext;
 
-const centerX = 400;
-const centerY = 300
+let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
+let snakeL = 25;
+const snakeH = 25;
+let snakeSpeed = 10;
+let snakeHead = snake[0];
+let snakeTail = snake[snake.length - 1];
+let nextStep = {
 
-let snake = [];
-let snakeX = 250;
-let snakeY = 250;
+}
 
+let ballX = 412;
+let ballY = 312;
+let direction;
 
 window.onload = function() {
   board = this.document.getElementById('gameBoard');
   boardContext = board.getContext('2d'); 
   drawBoard();
   createSnake();
-  createPrey();
+  createBall();
+  console.log(snakeTail);
 
-  this.setInterval(function() {
+  setInterval(function() {
     drawBoard();
     createSnake();
-    createPrey();
+    createBall();
+    checkBoundaries();
 
-  }, 1000);
+  }, 300);
 
    document.addEventListener('keydown', (event) => {
     snakeMovement(event)
@@ -34,89 +42,130 @@ function drawBoard() {
   boardContext.fillRect(0, 0, board.width, board.height);
 }
 
+function createBall() {
+  // respawns a new ball in a random location when eaten.
+  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY && snakeHead.x <= ballX && snakeHead.x+snakeL > ballX){
+    // grow();
+    console.log('temp')
+    ballX = Math.floor(Math.random()*78)*10;
+    ballY = Math.floor(Math.random()*58)*10;
 
-function createSnake(direction) {
-  snake = [ {x:snakeX, y: snakeY, snakeW: 50, snakeL:25 } ]
+  } else{
+    boardContext.fillStyle = 'red';
+    boardContext.beginPath();
+    boardContext.arc(ballX,ballY,10,0,Math.PI*2, true);
+    boardContext.fill();
+     }
+}
 
+function createSnake() {
     snake.forEach(link => {
     boardContext.fillStyle = 'green';
-    boardContext.fillRect(link.x, link.y, link.snakeW, link.snakeL);
-  })
+    boardContext.fillRect(link.x, link.y, snakeH, snakeL);
+    
+  })  
 
-  switch(direction){
+  nextStep = {
+    x: snakeHead.x + snakeSpeed,
+    y: snakeHead.y + snakeSpeed
+};
+
+
+switch(direction){
   case 'up':
-    snakeY -= 10;
+    snakeHead.y -= snakeSpeed;
     break;
   case 'down':
-    snakeY += 10;
+      snakeHead.y += snakeSpeed;          
     break;
   case 'left':
-    snakeX -= 10;
+      snakeHead.x -= snakeSpeed;
     break
   case 'right':
-    snakeX += 10;
+      snakeHead.x += snakeSpeed;
   default:
-    console.log('what?')
+    console.log('dead')
 } 
+
+// I feel like I need this somewhere but cant figure out if I need to move things around or not.
+
+  // for(let i = 0; i < snake.length; i++){
+  //    snake[i-1] = snake[i+1];
+
+  // }
   
-  console.log(snake)
+//   switch(direction){
+//   case 'up':
+//     break;
+//   case 'down':
+//       snakeHead.y += snakeSpeed;
+//     break;
+//   case 'left':
+//       snakeHead.x -= snakeSpeed;
+//     break
+//   case 'right':
+//       snakeHead.x += snakeSpeed;
+//   default:
+//     console.log('dead')
+// } 
+
+  // console.log(snake[i].x, snake[i].y)
 
 }
-
-function createPrey() {
-  boardContext.fillStyle = 'red';
-  boardContext.beginPath();
-  boardContext.arc(centerX,centerY,10,0,Math.PI*2, true);
-  boardContext.fill();
-}
-
-// MOVEMENT
-
-// function checkBoundaries() {
-
-// // X Axis
-//   if(snakeX > board.width - 45 || snakeX < 0) {
-//     // alert('GAME OVER!!')
-//   }
-
-//   // Y Axis
-//   if(snakeY > board.height - 45 || snakeY < 0) {
-//     // alert('GAME OVER!!')
-//   }
-// }
 
 
 function snakeMovement(event) {
   action = event.keyCode;
-  let direction;
-
+  
   switch(action) {
     case 38:
     case 87:
-      console.log('You pressed Up!');
       direction = 'up';
-      createSnake(direction);
+      createSnake();
       break;
     case 40:
     case 83:
-      console.log('You pressed Down!');
       direction = 'down';
-      createSnake(direction);
+      createSnake();
       break;
     case 37:
     case 65:
-      console.log('You pressed Left!');
       direction = 'left';
-      createSnake(direction);
+      createSnake();
       break;
     case 39:
     case 68:
-      console.log('You pressed Right!');
       direction = 'right';
-      createSnake(direction);
+      createSnake();
       break;
     default:
-      console.log('default') ;
+      createSnake();
   }
 }
+
+
+function checkBoundaries() {
+
+// X Axis
+  if(snakeHead.x > board.width - 15 || snakeHead.x < 0) {
+    alert('GAME OVER!!');
+    // reset();
+  }
+
+  // // Y Axis
+  if(snakeHead.y > board.height - 15 || snakeHead.y < 0) {
+    alert('GAME OVER!!');
+    // reset();
+  }
+  
+}
+
+// function grow() {
+//   newLink = {x:snakeTail.x,
+//              y:snakeTail.y}
+//   snake.push(newLink);
+
+// }
+
+
 
