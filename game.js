@@ -1,15 +1,14 @@
+// Testing the new branch
+
 let board;
 let boardContext;
 
-let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
+let snake = [{x:400, y:300}];
 let snakeL = 25;
 const snakeH = 25;
 let snakeSpeed = 10;
 let snakeHead = snake[0];
 let snakeTail = snake[snake.length - 1];
-let nextStep = {
-
-}
 
 let ballX = 412;
 let ballY = 312;
@@ -44,9 +43,8 @@ function drawBoard() {
 
 function createBall() {
   // respawns a new ball in a random location when eaten.
-  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY && snakeHead.x <= ballX && snakeHead.x+snakeL > ballX){
-    // grow();
-    console.log('temp')
+  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY){
+    grow();
     ballX = Math.floor(Math.random()*78)*10;
     ballY = Math.floor(Math.random()*58)*10;
 
@@ -62,21 +60,17 @@ function createSnake() {
     snake.forEach(link => {
     boardContext.fillStyle = 'green';
     boardContext.fillRect(link.x, link.y, snakeH, snakeL);
+
     
-  })  
+  })
+  
 
-  nextStep = {
-    x: snakeHead.x + snakeSpeed,
-    y: snakeHead.y + snakeSpeed
-};
-
-
-switch(direction){
+  switch(direction){
   case 'up':
     snakeHead.y -= snakeSpeed;
     break;
   case 'down':
-      snakeHead.y += snakeSpeed;          
+      snakeHead.y += snakeSpeed;
     break;
   case 'left':
       snakeHead.x -= snakeSpeed;
@@ -86,30 +80,7 @@ switch(direction){
   default:
     console.log('dead')
 } 
-
-// I feel like I need this somewhere but cant figure out if I need to move things around or not.
-
-  // for(let i = 0; i < snake.length; i++){
-  //    snake[i-1] = snake[i+1];
-
-  // }
-  
-//   switch(direction){
-//   case 'up':
-//     break;
-//   case 'down':
-//       snakeHead.y += snakeSpeed;
-//     break;
-//   case 'left':
-//       snakeHead.x -= snakeSpeed;
-//     break
-//   case 'right':
-//       snakeHead.x += snakeSpeed;
-//   default:
-//     console.log('dead')
-// } 
-
-  // console.log(snake[i].x, snake[i].y)
+  console.log(snake[0].x, snake[0].y)
 
 }
 
@@ -161,10 +132,11 @@ function checkBoundaries() {
 }
 
 // function grow() {
-//   newLink = {x:snakeTail.x,
-//              y:snakeTail.y}
+//   newLink = {x:snakeTail.x - snakeSpeed, y:snakeTail.y - snakeSpeed}
 //   snake.push(newLink);
-
+//   // snake.unshift(newLink);
+//   // snake.pop();
+//   console.log('new snake',snake)
 // }
 
 
