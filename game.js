@@ -1,14 +1,15 @@
-// Testing the new branch
-
 let board;
 let boardContext;
 
-let snake = [{x:400, y:300}];
+let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
 let snakeL = 25;
 const snakeH = 25;
 let snakeSpeed = 10;
 let snakeHead = snake[0];
 let snakeTail = snake[snake.length - 1];
+let nextStep = {
+  
+};
 
 let ballX = 412;
 let ballY = 312;
@@ -18,20 +19,19 @@ window.onload = function() {
   board = this.document.getElementById('gameBoard');
   boardContext = board.getContext('2d'); 
   drawBoard();
-  createSnake();
+  slither();
   createBall();
-  console.log(snakeTail);
 
   setInterval(function() {
     drawBoard();
-    createSnake();
+    slither();
     createBall();
     checkBoundaries();
 
-  }, 300);
+  }, 100);
 
    document.addEventListener('keydown', (event) => {
-    snakeMovement(event)
+    snakeCommands(event)
   })
    
 }
@@ -42,8 +42,7 @@ function drawBoard() {
 }
 
 function createBall() {
-  // respawns a new ball in a random location when eaten.
-  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY){
+  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY && snakeHead.x <= ballX && snakeHead.x+snakeL > ballX){
     grow();
     ballX = Math.floor(Math.random()*78)*10;
     ballY = Math.floor(Math.random()*58)*10;
@@ -56,88 +55,110 @@ function createBall() {
      }
 }
 
-function createSnake() {
+function slither() {
     snake.forEach(link => {
     boardContext.fillStyle = 'green';
     boardContext.fillRect(link.x, link.y, snakeH, snakeL);
-
     
-  })
-  
+  }) ;
 
-  switch(direction){
+ switch(direction){
   case 'up':
+    snake.pop();
     snakeHead.y -= snakeSpeed;
+    nextStep ={x:snakeHead.x, y:snakeHead.y};
+    snake.unshift(nextStep);
     break;
   case 'down':
-      snakeHead.y += snakeSpeed;
+    snake.pop();
+    snakeHead.y += snakeSpeed;
+    nextStep ={x:snakeHead.x, y:snakeHead.y};
+    snake.unshift(nextStep);          
     break;
   case 'left':
-      snakeHead.x -= snakeSpeed;
+    snake.pop();
+    snakeHead.x -= snakeSpeed;
+    nextStep ={x:snakeHead.x, y:snakeHead.y};
+    snake.unshift(nextStep);
     break
-  case 'right':
-      snakeHead.x += snakeSpeed;
+  case 'right':   
+    snake.pop();
+    snakeHead.x += snakeSpeed;
+    nextStep ={x:snakeHead.x, y:snakeHead.y};
+    snake.unshift(nextStep);
   default:
     console.log('dead')
-} 
-  console.log(snake[0].x, snake[0].y)
-
+ } 
 }
 
 
-function snakeMovement(event) {
+function snakeCommands(event) {
   action = event.keyCode;
   
   switch(action) {
     case 38:
     case 87:
-      direction = 'up';
-      createSnake();
+      if(direction !== 'down'){
+          direction = 'up';}
+           else{
+          slither();}
       break;
     case 40:
     case 83:
-      direction = 'down';
-      createSnake();
+        if(direction !== 'up'){
+          direction = 'down';}
+           else{
+          slither();
+        }      
       break;
     case 37:
     case 65:
-      direction = 'left';
-      createSnake();
+        if(direction !== 'right'){
+          direction = 'left';}
+           else{
+          slither();
+         }
       break;
     case 39:
     case 68:
-      direction = 'right';
-      createSnake();
+        if(direction !== 'left'){
+          direction = 'right';}
+           else{
+          slither();
+         }      
       break;
     default:
-      createSnake();
+      slither();
   }
 }
 
+function grow() {
+  newLink = {x:snakeTail.x,
+             y:snakeTail.y}
+  snake.push(newLink);
+
+}
 
 function checkBoundaries() {
 
 // X Axis
-  if(snakeHead.x > board.width - 15 || snakeHead.x < 0) {
+  if(snakeHead.x > board.width - 10 || snakeHead.x < 0) {
     alert('GAME OVER!!');
     // reset();
   }
 
   // // Y Axis
-  if(snakeHead.y > board.height - 15 || snakeHead.y < 0) {
+  if(snakeHead.y > board.height - 10 || snakeHead.y < 0) {
     alert('GAME OVER!!');
     // reset();
   }
+
+  // for(let i = 0; i < snake.length; i++) {
+  //   if(nextStep.y === snake[i].y && nextStep.x === snake[i].x){
+  //     alert('Games Over')
+  //   }
+  // }
+
   
 }
-
-// function grow() {
-//   newLink = {x:snakeTail.x - snakeSpeed, y:snakeTail.y - snakeSpeed}
-//   snake.push(newLink);
-//   // snake.unshift(newLink);
-//   // snake.pop();
-//   console.log('new snake',snake)
-// }
-
-
 
