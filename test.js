@@ -22,24 +22,64 @@
 
 // }
 
-let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
-console.log(snake)
+// console.log(snake)
 
 
-let snakeCopy = [];
+// let snakeCopy = [];
 
-function test() {
-  for (let index = 0; index < snake.length; index++) {
+// function test() {
+//   for (let index = 0; index < snake.length; index++) {
 
-    snakeCopyLink ={x:snake[index].x, y:snake[index].y};
-    snakeCopy.push(snakeCopyLink);
+//     snakeCopyLink ={x:snake[index].x, y:snake[index].y};
+//     snakeCopy.push(snakeCopyLink);
     
-  }
-  return snakeCopy;
+//   }
+//   return snakeCopy;
 
+// }
+
+
+// test();
+// console.log('copy', snakeCopy);
+
+let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
+// let snakeClone= [];
+
+function slither() {
+  // test();
+  
+  snakeClone = snake.map(link => ({ x: link.x, y: link.y}));
 }
+slither();
+  console.log(snakeClone)
 
-
-test();
-console.log('copy', snakeCopy);
+  // move snake head in the current direction
+//   switch (direction) {
+//     case "up":
+//       snake[0].y -= snakeSpeed;
+//       break;
+//     case "down":
+//       snake[0].y += snakeSpeed;
+//       break;
+//     case "left":
+//       snake[0].x -= snakeSpeed;
+//       break;
+//     case "right":
+//       snake[0].x += snakeSpeed;
+//     // nextStep ={x:snake[0].x, y:snake[0].y};
+//     // snake.unshift(nextStep);
+//       break;
+//     default:
+//       throw new Error('invalid direction');
+//   }
+//   // move each following piece where the parent was
+//   for (let i = 1; i < snake.length; i++) {
+//     const parent = snakeClone[i - 1];
+//     if (snake[0].y === snake[i].y && snake[0].x === snake[i].x) {
+//       console.log("Over");
+//     } 
+//     snake[i].x = parent.x;
+//     snake[i].y = parent.y;
+//   }
+// }
 
