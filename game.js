@@ -1,171 +1,200 @@
 let board;
 let boardContext;
 
-let snake = [{x:200, y:300},{x:190, y:300},{x:180, y:300},{x:170, y:300}];
-let snakeL = 25;
-const snakeH = 25;
+let score = 0;
+
+let snake = [
+  { x: 200, y: 300 },
+  { x: 190, y: 300 },
+  { x: 180, y: 300 },
+  { x: 170, y: 300 }
+];
+
+let snakeL = 20;
+const snakeH = 20;
 let snakeSpeed = 10;
-let snakeHead = snake[0];
-let snakeTail = snake[snake.length - 1];
-let nextStep = {
 
-}
+let direction = "right";
 
-let ballX = 412;
-let ballY = 312;
-let direction;
+let ballX = 410;
+let ballY = 310;
+
+
+
 
 window.onload = function() {
-  board = this.document.getElementById('gameBoard');
-  boardContext = board.getContext('2d'); 
+  board = this.document.getElementById("gameBoard");
+  boardContext = board.getContext("2d");
   drawBoard();
   createSnake();
   createBall();
-  console.log(snakeTail);
+  slither(); 
+  gameOn();
 
   setInterval(function() {
     drawBoard();
     createSnake();
+    slither();
     createBall();
     checkBoundaries();
+  }, 100);
 
-  }, 300);
-
-   document.addEventListener('keydown', (event) => {
-    snakeMovement(event)
-  })
-   
-}
+  document.addEventListener("keydown", event => {
+    snakeCommands(event);
+  });
+};
 
 function drawBoard() {
-  boardContext.fillStyle = 'black';
+  boardContext.fillStyle = "black";
   boardContext.fillRect(0, 0, board.width, board.height);
 }
 
-function createBall() {
-  // respawns a new ball in a random location when eaten.
-  if(snakeHead.y <= ballY && snakeHead.y+snakeH > ballY && snakeHead.x <= ballX && snakeHead.x+snakeL > ballX){
-    // grow();
-    console.log('temp')
-    ballX = Math.floor(Math.random()*78)*10;
-    ballY = Math.floor(Math.random()*58)*10;
-
-  } else{
-    boardContext.fillStyle = 'red';
-    boardContext.beginPath();
-    boardContext.arc(ballX,ballY,10,0,Math.PI*2, true);
-    boardContext.fill();
-     }
-}
-
 function createSnake() {
-    snake.forEach(link => {
-    boardContext.fillStyle = 'green';
+  snake.forEach(link => {
+    boardContext.fillStyle = "green";
     boardContext.fillRect(link.x, link.y, snakeH, snakeL);
-    
-  })  
-
-  nextStep = {
-    x: snakeHead.x + snakeSpeed,
-    y: snakeHead.y + snakeSpeed
-};
-
-
-switch(direction){
-  case 'up':
-    snakeHead.y -= snakeSpeed;
-    break;
-  case 'down':
-      snakeHead.y += snakeSpeed;          
-    break;
-  case 'left':
-      snakeHead.x -= snakeSpeed;
-    break
-  case 'right':
-      snakeHead.x += snakeSpeed;
-  default:
-    console.log('dead')
-} 
-
-// I feel like I need this somewhere but cant figure out if I need to move things around or not.
-
-  // for(let i = 0; i < snake.length; i++){
-  //    snake[i-1] = snake[i+1];
-
-  // }
-  
-//   switch(direction){
-//   case 'up':
-//     break;
-//   case 'down':
-//       snakeHead.y += snakeSpeed;
-//     break;
-//   case 'left':
-//       snakeHead.x -= snakeSpeed;
-//     break
-//   case 'right':
-//       snakeHead.x += snakeSpeed;
-//   default:
-//     console.log('dead')
-// } 
-
-  // console.log(snake[i].x, snake[i].y)
+  });
 
 }
 
-
-function snakeMovement(event) {
-  action = event.keyCode;
+function createBall() {   
+    boardContext.fillStyle = "red";
+    boardContext.beginPath();
+    boardContext.arc(ballX, ballY, 10, 0, Math.PI * 2, true);
+    boardContext.fill();
   
-  switch(action) {
+}
+
+function snakeCommands(event) {
+  action = event.keyCode;
+
+  switch (action) {
     case 38:
     case 87:
-      direction = 'up';
-      createSnake();
+      if (direction !== "down") {
+        direction = "up";
+      } else {
+        slither();
+      }
       break;
     case 40:
     case 83:
-      direction = 'down';
-      createSnake();
+      if (direction !== "up") {
+        direction = "down";
+      } else {
+        slither();
+      }
       break;
     case 37:
     case 65:
-      direction = 'left';
-      createSnake();
+      if (direction !== "right") {
+        direction = "left";
+      } else {
+        slither();
+      }
       break;
     case 39:
     case 68:
-      direction = 'right';
-      createSnake();
+      if (direction !== "left") {
+        direction = "right";
+      } else {
+        slither();
+      }
       break;
     default:
-      createSnake();
+      slither();
   }
 }
 
+function slither() {
+  snakeClone = snake.map(link => ({ x: link.x, y: link.y }));
+  // move snake head in the current direction
+
+  switch (direction) {
+    case "up":
+      snake[0].y -= snakeSpeed;
+      break;
+    case "down":
+      snake[0].y += snakeSpeed;
+      break;
+    case "left":
+      snake[0].x -= snakeSpeed;
+      break;
+    case "right":
+      snake[0].x += snakeSpeed;
+      break;
+    default:
+      throw new Error("invalid direction");
+  }
+  // move each following piece where the parent was
+  for (let i = 1; i < snake.length; i++) {
+    const parent = snakeClone[i - 1];
+
+    snake[i].x = parent.x;
+    snake[i].y = parent.y;
+  }
+}
+
+function grow() {
+  score++;
+  document.getElementById('score').innerHTML = score;
+
+  newLink = { x: snake[snake.length - 1].x, y: [snake.length - 1].y };
+  snake.push(newLink);
+}
 
 function checkBoundaries() {
+  for (let i = 1; i < snake.length; i++) {
+      // X Axis
 
-// X Axis
-  if(snakeHead.x > board.width - 15 || snakeHead.x < 0) {
-    alert('GAME OVER!!');
-    // reset();
+    if (snake[0].x > board.width || snake[0].x < 0) {
+      gameOver();
+    }
+
+    //  Y Axis
+    if (snake[0].y > board.height || snake[0].y < 0) {
+      gameOver();
+    }
+
+    // snake collision
+    if (snake[0].y === snake[i].y && snake[0].x === snake[i].x) {
+      gameOver();
+    }
+
+    if (
+      snake[0].y <= ballY &&
+      snake[0].y + snakeH > ballY &&
+      snake[0].x <= ballX &&
+      snake[0].x + snakeL > ballX
+    ) {
+      grow();
+      ballX = Math.floor(Math.random() * 70) * 10;
+      ballY = Math.floor(Math.random() * 50) * 10;
+    }
   }
 
-  // // Y Axis
-  if(snakeHead.y > board.height - 15 || snakeHead.y < 0) {
-    alert('GAME OVER!!');
-    // reset();
-  }
-  
 }
 
-// function grow() {
-//   newLink = {x:snakeTail.x,
-//              y:snakeTail.y}
-//   snake.push(newLink);
+function gameOn() {
+  alert('Press OK to start');
 
-// }
+}
 
+function gameOver() {
+  alert(`Game Over  Your Score is ${score}`)
 
+  snake = [
+    { x: 200, y: 300 },
+    { x: 190, y: 300 },
+    { x: 180, y: 300 },
+    { x: 170, y: 300 }
+  ];
 
+  score = 0;
+
+  direction = "right";
+
+  ballX = 412;
+  ballY = 312;
+
+}
