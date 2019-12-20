@@ -1,6 +1,8 @@
 let board;
 let boardContext;
 
+let score = 0;
+
 let snake = [
   { x: 200, y: 300 },
   { x: 190, y: 300 },
@@ -8,30 +10,31 @@ let snake = [
   { x: 170, y: 300 }
 ];
 
-let snakeL = 25;
-const snakeH = 25;
+let snakeL = 20;
+const snakeH = 20;
 let snakeSpeed = 10;
 
 let direction = "right";
 
-let ballX = 412;
-let ballY = 312;
+let ballX = 410;
+let ballY = 310;
 
-let score = 0;
+
+
 
 window.onload = function() {
   board = this.document.getElementById("gameBoard");
   boardContext = board.getContext("2d");
   drawBoard();
-  createSnake(); //
+  createSnake();
   createBall();
-  slither(); //
+  slither(); 
   gameOn();
 
   setInterval(function() {
     drawBoard();
-    createSnake(); //
-    slither(); //
+    createSnake();
+    slither();
     createBall();
     checkBoundaries();
   }, 100);
@@ -134,6 +137,7 @@ function slither() {
 
 function grow() {
   score++;
+  document.getElementById('score').innerHTML = score;
 
   newLink = { x: snake[snake.length - 1].x, y: [snake.length - 1].y };
   snake.push(newLink);
@@ -143,12 +147,12 @@ function checkBoundaries() {
   for (let i = 1; i < snake.length; i++) {
       // X Axis
 
-    if (snake[0].x > board.width - 10 || snake[0].x < 0) {
+    if (snake[0].x > board.width || snake[0].x < 0) {
       gameOver();
     }
 
     //  Y Axis
-    if (snake[0].y > board.height - 10 || snake[0].y < 0) {
+    if (snake[0].y > board.height || snake[0].y < 0) {
       gameOver();
     }
 
@@ -164,15 +168,15 @@ function checkBoundaries() {
       snake[0].x + snakeL > ballX
     ) {
       grow();
-      ballX = Math.floor(Math.random() * 78) * 10;
-      ballY = Math.floor(Math.random() * 58) * 10;
+      ballX = Math.floor(Math.random() * 70) * 10;
+      ballY = Math.floor(Math.random() * 50) * 10;
     }
   }
 
 }
 
 function gameOn() {
-  alert('Use the "WASD" or the "Arrow Keys" to move the snake. \n   \n   \n Press any key to start!!');
+  alert('Press OK to start');
 
 }
 
