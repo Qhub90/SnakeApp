@@ -8,7 +8,7 @@
 --------------------------------
 ## Summary
 
-### I created this app to apply my Javascript skills. 
+#### I created this app to apply my Javascript skills. 
 
 
 
