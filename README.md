@@ -1,17 +1,13 @@
 # Sssnake
 
-**The Classic Snake Game**
-
-**Click [here](https://qhub90.github.io/SnakeApp/) to Slither!**
+**The Classic Snake Game**   **click [here](https://qhub90.github.io/SnakeApp/) to slither!**
 
 
 
 
-
-
-
-## Summary
 --------------------------------
+## Summary
+
 ### I created this app to apply my Javascript skills. 
 
 
